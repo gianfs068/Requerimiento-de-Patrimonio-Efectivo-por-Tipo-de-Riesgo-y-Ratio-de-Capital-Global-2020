@@ -1,0 +1,250 @@
+---
+title: "Requerimiento de Patrimonio Efectivo por Tipo de Riesgo y Ratio de Capital Global 2020"
+author: "Gian Franco Jacinto Quispe"
+date: "Realizado el `r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: journal
+    toc: yes
+    toc_float: true
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r configuracion_inicial,echo=FALSE,comment=F,warning=FALSE,message=FALSE}
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+library(plyr)
+
+
+# Seleccionamos la carpeta de trabajo 
+setwd("C:/Users/USER/Desktop/Tarea 3/RPE y RCG")
+
+
+## Limpiamos las bases de datos
+bd_Ene_2020 = readxl::read_xls("C-1252-en2020.XLS",skip = 6)
+bd_Ene_2020 = na.omit(bd_Ene_2020)
+bd_Ene_2020 = bd_Ene_2020[-13:-14,]
+names(bd_Ene_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Ene_2020[,-1] = sapply(bd_Ene_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Ene_2020$FECHA = "2020-01-31"          
+
+
+bd_Feb_2020 = readxl::read_xls("C-1252-fe2020.XLS",skip = 6)
+bd_Feb_2020 = na.omit(bd_Feb_2020)
+bd_Feb_2020 = bd_Feb_2020[-13:-14,]
+names(bd_Feb_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Feb_2020[,-1] = sapply(bd_Feb_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Feb_2020$FECHA = "2020-02-29"          
+
+
+bd_Mar_2020 = readxl::read_xls("C-1252-ma2020.XLS",skip = 6)
+bd_Mar_2020 = na.omit(bd_Mar_2020)
+bd_Mar_2020 = bd_Mar_2020[-13:-14,]
+names(bd_Mar_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Mar_2020[,-1] = sapply(bd_Mar_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Mar_2020$FECHA = "2020-03-31"          
+
+
+bd_Abr_2020 = readxl::read_xls("C-1252-ab2020.XLS",skip = 6)
+bd_Abr_2020 = na.omit(bd_Abr_2020)
+bd_Abr_2020 = bd_Abr_2020[-13:-14,]
+names(bd_Abr_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Abr_2020[,-1] = sapply(bd_Abr_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Abr_2020$FECHA = "2020-04-30"          
+
+
+bd_May_2020 = readxl::read_xls("C-1252-my2020.XLS",skip = 6)
+bd_May_2020 = na.omit(bd_May_2020)
+bd_May_2020 = bd_May_2020[-13:-14,]
+names(bd_May_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_May_2020[,-1] = sapply(bd_May_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_May_2020$FECHA = "2020-05-31"          
+
+
+bd_Jun_2020 = readxl::read_xls("C-1252-jn2020.XLS",skip = 6)
+bd_Jun_2020 = na.omit(bd_Jun_2020)
+bd_Jun_2020 = bd_Jun_2020[-13:-14,]
+names(bd_Jun_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Jun_2020[,-1] = sapply(bd_Jun_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Jun_2020$FECHA = "2020-06-30"          
+
+
+bd_Jul_2020 = readxl::read_xls("C-1252-jl2020.XLS",skip = 6)
+bd_Jul_2020 = na.omit(bd_Jul_2020)
+bd_Jul_2020 = bd_Jul_2020[-13:-14,]
+names(bd_Jul_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Jul_2020[,-1] = sapply(bd_Jul_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Jul_2020$FECHA = "2020-07-31"          
+
+
+bd_Ago_2020 = readxl::read_xls("C-1252-ag2020.XLS",skip = 6)
+bd_Ago_2020 = na.omit(bd_Ago_2020)
+bd_Ago_2020 = bd_Ago_2020[-13:-14,]
+names(bd_Ago_2020) = c("ENTIDAD","RPE_RIESGO_CRÉDITO","RPE_RIESGO_MERCADO","RPE_RIESGO_OPERACIONAL","TOTAL_REQUERIMIENTO","PATRIMONIO_EFECTIVO","RATIO_DE_CAPITAL_GLOBAL")
+bd_Ago_2020[,-1] = sapply(bd_Ago_2020[,-1],function(x) round(as.numeric(as.character(x)),2))
+bd_Ago_2020$FECHA = "2020-08-31"          
+
+# Unimos las bases de datos
+
+RCG <- rbind(bd_Ene_2020,bd_Feb_2020)
+RCG <- rbind(RCG,bd_Mar_2020)
+RCG <- rbind(RCG,bd_Abr_2020)
+RCG <- rbind(RCG,bd_May_2020)
+RCG <- rbind(RCG,bd_Jun_2020)
+RCG <- rbind(RCG,bd_Jul_2020)
+RCG <- rbind(RCG,bd_Ago_2020)
+
+```
+
+
+## Requerimiento de Patrimonio Efectivo por Tipo de Riesgo
+
+### Por Riesgo de Crédito: 
+
+> Patrimonio Efectivo exigido a las empresas del sistema financiero para cubrir el riesgo de crédito que enfrentan, siendo equivalente al 10% de los activos y contingentes ponderados por riesgo de crédito.
+
+```{r grafico_1, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+bd_1 = RCG %>% 
+filter(ENTIDAD != c("TOTAL CAJAS MUNICIPALES DE AHORRO Y CRÉDITO")) %>% 
+summarise(ENTIDAD = ENTIDAD, RPE_RIESGO_CRÉDITO = RPE_RIESGO_CRÉDITO/1000, RPE_RIESGO_MERCADO = RPE_RIESGO_MERCADO, RPE_RIESGO_OPERACIONAL = RPE_RIESGO_OPERACIONAL, TOTAL_REQUERIMIENTO = TOTAL_REQUERIMIENTO, PATRIMONIO_EFECTIVO = PATRIMONIO_EFECTIVO, RATIO_DE_CAPITAL_GLOBAL = RATIO_DE_CAPITAL_GLOBAL, FECHA = FECHA)
+
+
+grafico_1 = ggplot(bd_1, aes(x=FECHA, y=RPE_RIESGO_CRÉDITO, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Riesgo de Crédito - Millones de soles")
+
+# grafico
+ggplotly(grafico_1) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+
+### Por Riesgo de Mercado: 
+
+> Patrimonio efectivo destinado a cubrir la posibilidad de pérdidas en posiciones dentro y fuera del balance derivadas de fluctuaciones en los precios de mercado (tasa de interés, precio de instrumentos financieros, tipo de cambio y commodities). 
+
+
+
+```{r grafico_2, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+bd_2 = RCG %>% 
+filter(ENTIDAD != c("TOTAL CAJAS MUNICIPALES DE AHORRO Y CRÉDITO"))
+
+grafico_2 = ggplot(bd_2, aes(x=FECHA, y=RPE_RIESGO_MERCADO, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Riesgo de Mercado - Miles de soles")
+
+# grafico
+ggplotly(grafico_2) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+
+### Por Riesgo Operacional: 
+
+> Patrimonio efectivo destinado a cubrir la posibilidad de ocurrencia de pérdidas que enfrentan las instituciones financieras debido a procesos inadecuados, fallas del personal, de la tecnología de información, o eventos externos. 
+
+
+```{r grafico_3, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+bd_3 = RCG %>% 
+filter(ENTIDAD != c("TOTAL CAJAS MUNICIPALES DE AHORRO Y CRÉDITO"))
+
+grafico_3 = ggplot(bd_3, aes(x=FECHA, y=RPE_RIESGO_OPERACIONAL, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Riesgo Operacional - Miles de soles")
+
+# grafico
+ggplotly(grafico_3) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+###  Requerimiento Total
+
+> Represnta la suma total de los requerimientos de crédito, mercado y operacional.
+
+```{r grafico_4, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+
+bd_4 = RCG %>% 
+filter(ENTIDAD != c("TOTAL CAJAS MUNICIPALES DE AHORRO Y CRÉDITO")) %>% 
+summarise(ENTIDAD = ENTIDAD, RPE_RIESGO_CRÉDITO = RPE_RIESGO_CRÉDITO, RPE_RIESGO_MERCADO = RPE_RIESGO_MERCADO, RPE_RIESGO_OPERACIONAL = RPE_RIESGO_OPERACIONAL, TOTAL_REQUERIMIENTO = TOTAL_REQUERIMIENTO/1000, PATRIMONIO_EFECTIVO = PATRIMONIO_EFECTIVO, RATIO_DE_CAPITAL_GLOBAL = RATIO_DE_CAPITAL_GLOBAL, FECHA = FECHA)
+
+grafico_4 = ggplot(bd_4, aes(x=FECHA, y=TOTAL_REQUERIMIENTO, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Total de Requerimeinto - Millones de soles")
+
+# grafico
+ggplotly(grafico_4) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+
+## Patrimonio Efectivo: 
+
+> Importe extra-contable que sirve de respaldo para cubrir riesgo de crédito, riesgo de mercado y riesgo operacional. Es igual a la suma del patrimonio básico (de nivel 1) y del patrimonio suplementario (de nivel 2 y 3).
+
+### Patrimonio de nivel 1: 
+
+> Incluye capital pagado, reservas legales, prima suplementaria de capital, reservas facultativas que sólo puedan ser reducidas previa conformidad de la Superintendencia, utilidades de ejercicios anteriores y del ejercicio en curso que cuenten con acuerdo de capitalización, además de otros elementos que reúnan características de permanencia y absorción de pérdidas. Se restan las pérdidas así como el déficit de provisiones y el monto de la plusvalía mercantil o crédito mercantil, además de otros conceptos señalados en el art. 184° de la Ley General.
+
+### Patrimonio de nivel 2: 
+
+> Incluye la parte computable de la deuda subordinada redimible y de los instrumentos con características de capital y de deuda que indique la Superintendencia, las provisiones genéricas hasta el 1,25% (en caso se emplee el método estándar) o hasta el 0,6% de los activos y contingentes ponderados por riesgo de crédito (en caso se emplee modelos internos), y las demás reservas facultativas.
+
+### Patrimonio de nivel 3: 
+
+> Está constituido por la deuda subordinada redimible exclusiva para soportar riesgos de mercado.
+
+
+```{r grafico_5, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+bd_5 = RCG %>% 
+filter(ENTIDAD != c("TOTAL CAJAS MUNICIPALES DE AHORRO Y CRÉDITO"))
+
+grafico_5 = ggplot(bd_5, aes(x=FECHA, y=PATRIMONIO_EFECTIVO, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Patrimonio Efectivo - Miles de soles")
+
+# grafico
+ggplotly(grafico_5) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+
+## Ratio de Capital Global
+
+> Es el resultado de dividir el patrimonio requerido total sobre los activos ponderados por riesgo de crédito, riesgo de mercado y riesgo operacional. Este es un indicador de solvencia de las entidades financieras, debido a que refleja el nivel de patrimonio efectivo del que dispone una entidad para hacer frente a las pérdidas no
+esperadas, las cuales no serían cubiertas por las provisiones, ya que estas últimas estarían destinadas a cubrir las pérdidas esperadas de la entidad financiera.
+
+> Este indicador mide la solidez de una entidad financiera y su capacidad para sobrellevar adecuadamente las fluctuaciones negativas del ciclo económico, por lo que es un componente muy utilizado por las distintas clasificadoras de riesgo para determinar la calificación de riesgos de las entidades financieras
+
+
+```{r grafico_6, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, comment=F}
+
+bd_6 = RCG
+
+grafico_6 = ggplot(bd_6, aes(x=FECHA, y=RATIO_DE_CAPITAL_GLOBAL, fill=ENTIDAD)) + 
+    geom_bar(stat="identity", position="dodge") + labs(title = "Ratio de Capital Global - Porcentaje")
+
+# grafico
+ggplotly(grafico_6) %>% layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+
+
+```
+
+
+## Datos SBS
+
+> Puedes encontrar los datos utilizados en el siguiente enlace: [SBS](https://www.sbs.gob.pe/app/stats_net/stats/EstadisticaBoletinEstadistico.aspx?p=3#)
